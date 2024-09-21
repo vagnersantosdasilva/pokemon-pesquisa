@@ -1,3 +1,10 @@
 <header>
-  <app-busca ></app-busca>
+  <app-busca (searchResults)="handleSearchResults($event)"></app-busca>
 </header>
+
+<section>
+  <div class="container">
+    <app-card [pokemonList]="pokemonList" [pokemonDetails]="pokemonDetails"></app-card>
+  </div>
+
+</section>
