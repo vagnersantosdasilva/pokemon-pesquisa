@@ -1,5 +1,6 @@
 <div class="search-container">
-    <input type="text" placeholder="Buscar Pokémon" >
-    <button >GO
+    <input type="text" placeholder="Buscar Pokémon" [(ngModel)]="searchValue">
+    <button (click)="searchPokemon()">GO
+        <!-- <img src="assets/search-icon.svg" alt="Search"> -->
     </button>
 </div>
