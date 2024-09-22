@@ -1,7 +1,6 @@
 <div class="d-block">
-    <div class="container">
-        <div class="row d-flex justify-content-center w-100" *ngIf="pokemonList">
-
+    <div >
+        <div class="row d-flex justify-content-start w-100 m-4" *ngIf="pokemonList">
             <div class="accordion col-sm-12 col-lg-2 col-md-3 m-3" [id]="'accordionExample' + i"
                 *ngFor="let pokemon of pokemonList; index as i">
                 <div class="accordion-item">
