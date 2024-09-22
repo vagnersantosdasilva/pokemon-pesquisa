@@ -1,29 +1,45 @@
 <div class="d-block">
     <div class="container">
-        <div class="row d-flex justify-content-center w-100 ">
-            <!-- Card carregado -->
-            <div class="card m-4 p-0" style="width: 18rem;" *ngIf="pokemonDetails">
-                <!-- Loader para a imagem -->
-                <div *ngIf="!imageLoaded" class="d-flex justify-content-center align-items-center"
-                    style="height: 286px;">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Carregando imagem...</span>
+        <div class="row d-flex justify-content-center w-100" *ngIf="pokemonList">
+
+            <div class="accordion col-sm-12 col-lg-2 col-md-3 m-3" [id]="'accordionExample' + i"
+                *ngFor="let pokemon of pokemonList; index as i">
+                <div class="accordion-item">
+                    <h4 class="accordion-header" [id]="'heading' + i">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            [attr.data-bs-target]="'#collapse' + i" aria-expanded="true"
+                            [attr.aria-controls]="'collapse' + i" (click)="fetchPokemonSelect(pokemon.name, i)">
+                            <h5 class="card-title">{{ pokemon.name | uppercase }}</h5>
+                        </button>
+                    </h4>
+                    <div [attr.id]="'collapse' + i" class="accordion-collapse collapse" aria-labelledby="'heading' + i"
+                        [attr.data-bs-parent]="'#accordionExample' + i">
+                        <div class="accordion-body" *ngIf="pokemonSelectedList[i]">
+                            <!-- {{pokemonSelectedList[i]?.name}} -->
+                            <!-- Imagem -->
+
+                            <div *ngIf="!pokemonSelectedList[i]?.imageLoaded"
+                                class="d-flex justify-content-center align-items-center" style="height: 150px;">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Carregando...</span>
+                                </div>
+                            </div>
+
+                            <!-- Imagem do Pokémon -->
+                            <img [hidden]="!pokemonSelectedList[i]?.imageLoaded"
+                                [src]="pokemonSelectedList[i]?.sprites?.front_default" class="card-img-top" alt="..."
+                                (load)="onImageSelectedLoad(i)">
+
+                            <!-- Botão para detalhes -->
+                            <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
+                                data-bs-target="#pokemonModal" (click)="fetchPokemonDetails(pokemon.name)">
+                                Detalhes
+                            </button>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Imagem do Pokémon -->
-                <img [hidden]="!imageLoaded" src="{{pokemonDetails.sprites.front_default}}" class="card-img-top"
-                    alt="..." (load)="onImageLoad()">
-
-                <div class="card-body">
-                    <h5 class="card-title">{{pokemonDetails.name}}</h5>
-                    <p class="card-text"></p>
-                    <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
-                        data-bs-target="#pokemonModal">
-                        Detalhes
-                    </button>
-                </div>
             </div>
+
         </div>
 
     </div>
@@ -31,11 +47,12 @@
 </div>
 
 <!-- Modal para detalhes do Pokémon -->
-<div class="modal fade" id="pokemonModal" tabindex="-1" aria-labelledby="pokemonModalLabel" aria-hidden="true" *ngIf="pokemonDetails">
+<div class="modal fade" id="pokemonModal" tabindex="-1" aria-labelledby="pokemonModalLabel" aria-hidden="true"
+    *ngIf="pokemonSelect">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="pokemonModalLabel">{{pokemonDetails.name}}</h5>
+                <h5 class="modal-title" id="pokemonModalLabel">{{pokemonSelect.name}}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -43,7 +60,7 @@
                 <!-- Imagem do Pokémon na linha de cima -->
                 <div class="row mb-4 d-flex justify-content-center">
                     <div class="col-12 text-center">
-                        <img [src]="pokemonDetails.sprites.front_default" class="img-fluid pokemon-sprite"
+                        <img [src]="pokemonSelect.sprites.front_default" class="img-fluid pokemon-sprite"
                             alt="Imagem do Pokémon">
                     </div>
                 </div>
@@ -62,7 +79,7 @@
                             data-bs-parent="#accordionExample">
                             <div class="accordion-body">
                                 <ul>
-                                    <li *ngFor="let ability of pokemonDetails.abilities">{{ ability.ability.name }}</li>
+                                    <li *ngFor="let ability of pokemonSelect.abilities">{{ ability.ability.name }}</li>
                                 </ul>
                             </div>
                         </div>
@@ -79,7 +96,7 @@
                         <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                             data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-                                {{pokemonDetails.base_experience}}
+                                {{pokemonSelect.base_experience}}
                             </div>
                         </div>
                     </div>
@@ -95,7 +112,7 @@
                         <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
                             data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-                                {{pokemonDetails.weight}}
+                                {{pokemonSelect.weight}}
                             </div>
                         </div>
                     </div>
@@ -111,7 +128,7 @@
                         <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
                             data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-                                {{pokemonDetails.height}}
+                                {{pokemonSelect.height}}
                             </div>
                         </div>
                     </div>
@@ -128,7 +145,7 @@
                             data-bs-parent="#accordionExample">
                             <div class="accordion-body">
                                 <ul>
-                                    <li *ngFor="let stat of pokemonDetails.stats">{{ stat.stat.name }}: {{
+                                    <li *ngFor="let stat of pokemonSelect.stats">{{ stat.stat.name }}: {{
                                         stat.base_stat }}</li>
                                 </ul>
                             </div>

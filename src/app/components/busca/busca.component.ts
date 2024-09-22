@@ -18,16 +18,34 @@ export class BuscaComponent {
   constructor(private pokemonService: PokemonService) { }
 
   searchPokemon() {
+    this.pokemonList = []
     this.pokemonService.getPokemon(this.searchValue).subscribe(
       result => {
         if (this.searchValue) {
-          this.searchResults.emit({ type: 'details', data: result });
-        } else {
-          this.searchResults.emit({ type: 'list', data: result.results });
+          this.pokemonList.push(result);
+        }else{
+          this.pokemonList = result.results;
         }
+        this.searchResults.emit({ type: 'list', data:this.pokemonList });
 
       },
       error => {
+        console.error('Erro ao buscar Pokémon', error);
+      }
+    );
+  }
+
+  ngOnInit() {
+    this.loadInitialPokemon();
+  }
+
+  loadInitialPokemon() {
+    this.pokemonService.getPaginatedPokemon( 0, 20).subscribe(
+      (result :any)=> {
+        this.pokemonList = result.results;
+        this.searchResults.emit({ type: 'list', data: this.pokemonList });
+      },
+      (error:any) => {
         console.error('Erro ao buscar Pokémon', error);
       }
     );

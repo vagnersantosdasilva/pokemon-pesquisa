@@ -15,4 +15,19 @@ export class PokemonService {
     console.log(result);
     return result;
   }
+
+  getPaginatedPokemon(offset: number, limit: number): any {
+    const url = `${this.baseUrl}pokemon/?offset=${offset}&limit=${limit}`;
+    return this.http.get<any>(url);
+  }
 }
+
+
+/*  Preciso implementar um controle de paginação
+{
+    "count": 1302,
+    "next": "https://pokeapi.co/api/v2/pokemon/?offset=20&limit=20",
+    "previous": null,
+    "results": [ ] 
+}
+*/
