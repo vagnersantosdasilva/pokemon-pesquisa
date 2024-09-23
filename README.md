@@ -1,27 +1,74 @@
-# PokemonPesquisa
+## PokemonPesquisa: Explore o Mundo dos Pokémons!
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.5.
+Este projeto Angular 18 te permite mergulhar no mundo dos Pokémons! Busque por seus favoritos ou descubra novos, explorando suas características e detalhes.
+Ele foi desenvolvido como desafio de Front End da empresa TOTVS.
 
-## Development server
+### Principais Funcionalidades:
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+* **Busca de Pokémons:** Encontre Pokémons facilmente por nome utilizando uma barra de pesquisa intuitiva.
+* **Visualizações Detalhadas:** Obtenha informações completas sobre cada Pokémon, incluindo estatísticas, habilidades, tipos e muito mais.
 
-## Code scaffolding
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Pré-requisitos
 
-## Build
+* Node.js (versão 16.x ou superior recomendada) e npm (ou yarn) instalados em seu sistema. Você pode baixá-los no site oficial: [https://nodejs.org/](https://nodejs.org/)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Instalação
 
-## Running unit tests
+1. Clone este repositório:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+   ```bash
+   git clone https://github.com/seu_usuario/pokemon-pesquisa.git
+   ```
 
-## Running end-to-end tests
+2. Navegue até o diretório do projeto:
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+   ```bash
+   cd pokemon-pesquisa
+   ```
 
-## Further help
+3. Instale as dependências:
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+   ```bash
+   npm install  # ou yarn install
+   ```
+
+### Configuração para Desenvolvimento
+
+1. Inicie o servidor de desenvolvimento:
+
+   ```bash
+   ng serve
+   ```
+
+   Isso abrirá a aplicação em `http://localhost:4200/` no seu navegador.
+
+### Estrutura do Código
+
+O código está dividido em arquivos de configuração e o componente app na raiz do projeto
+e separado em pastas contendo serviços e componentes
+
+### Executando Testes Unitários
+
+1. Execute os testes unitários:
+
+   ```bash
+   ng test
+   ```
+
+   Este comando utiliza o Karma para executar os testes unitários, fornecendo feedback sobre a correção do seu código.
+
+### Compilação para Produção
+
+1. Crie uma compilação otimizada para produção:
+
+   ```bash
+   ng build
+   ```
+
+   Os artefatos da compilação serão armazenados no diretório `dist`, prontos para serem implantados em uma plataforma de hospedagem.
+
+
+### Licença
+
+MIT
