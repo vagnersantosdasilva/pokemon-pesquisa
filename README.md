@@ -18,7 +18,7 @@ Ele foi desenvolvido como desafio de Front End da empresa TOTVS.
 1. Clone este repositório:
 
    ```bash
-   git clone https://github.com/seu_usuario/pokemon-pesquisa.git
+   git clone https://github.com/vagnersantosdasilva/pokemon-pesquisa.git
    ```
 
 2. Navegue até o diretório do projeto:
