@@ -1,8 +1,8 @@
-<div class="d-block">
-    <div >
+<div>
+    <div>
         <div class="row d-flex justify-content-start w-100 m-4" *ngIf="pokemonList">
             <div class="accordion col-sm-12 col-lg-2 col-md-3 m-3" [id]="'accordionExample' + i"
-                *ngFor="let pokemon of pokemonList; index as i">
+                *ngFor="let pokemon of pokemonList.results; index as i">
                 <div class="accordion-item">
                     <h4 class="accordion-header" [id]="'heading' + i">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse"
@@ -44,6 +44,27 @@
     </div>
 
 </div>
+<footer>
+    <div class="d-flex justify-content-center">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item" [class.disabled]="!pokemonList.previous">
+                    <button class="page-link" (click)="previousPage()"
+                        [disabled]="!pokemonList.previous">ANTERIOR</button>
+                </li>
+                <!-- <li class="page-item disabled">
+                    <span class="page-link">{{ currentPage }}</span>
+                </li> -->
+                <li class="page-item" [class.disabled]="!pokemonList.next">
+                    <button class="page-link" (click)="nextPage()" [disabled]="!pokemonList.next">SEGUINTE</button>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</footer>
+
+
+
 
 <!-- Modal para detalhes do Pokémon -->
 <div class="modal fade" id="pokemonModal" tabindex="-1" aria-labelledby="pokemonModalLabel" aria-hidden="true"

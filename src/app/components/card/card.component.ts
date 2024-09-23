@@ -1,79 +1,113 @@
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PokemonService } from '../../service/pokemon.service';
+import { PokemonList } from '../../interfaces/PokemonList';
+
 
 @Component({
   selector: 'app-card',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './card.component.html',
-  styleUrl: './card.component.css'
+  styleUrls: ['./card.component.css']
 })
-export class CardComponent {
+export class CardComponent implements OnInit {
 
-  constructor(private pokemonService: PokemonService,private cdr: ChangeDetectorRef) { }
+  currentPage: number = 1;
+  limit: number = 20;
+  totalItems: number = 0;
+  offset: number = 0; // Offset para o cálculo de paginação
+  isSearching: boolean = false; // Flag para identificar se está em busca
 
-  @Input() pokemonList: any[] = [];
+  @Input() pokemonList: PokemonList = {
+    count: 0,
+    results: [],
+    next: '',
+    previous: '',
+  };
   @Input() pokemonDetails: any = null;
-  @Input() pokemonSelect: any = {name:'',sprites:'',abilities:[],base_experience:'',weight:'',height:'',stats:[]};
+  @Input() pokemonSelect: any = { name: '', sprites: '', abilities: [], base_experience: '', weight: '', height: '', stats: [] };
   pokemonSelectedList: any[] = [];
 
+  constructor(private pokemonService: PokemonService, private cdr: ChangeDetectorRef) { }
+
   ngOnInit(): void {
-    // Optional: If fetchPokemonDetails is called before data is received
-    if (!this.pokemonDetails) {
-      this.fetchPokemonDetails(this.pokemonList[0].name); // Use the first Pokemon by default
+    // Verifica se pokemonList e results estão definidos e não estão vazios
+    if (!this.pokemonDetails && this.pokemonList && Array.isArray(this.pokemonList.results) && this.pokemonList.results.length > 0) {
+      this.fetchPokemonDetails(this.pokemonList.results[0].name); // Usa o primeiro Pokémon por padrão
     }
+    this.fetchPokemonPage(this.offset, this.limit); // Inicializa a página com a primeira lista
   }
 
-  fetchPokemonDetails(name: string) {
+  fetchPokemonDetails(name: string): void {
     this.pokemonService.getPokemon(name)
       .subscribe(response => {
         this.pokemonSelect = response;
         console.log(this.pokemonSelect); // Verifique se a resposta está correta no console
-        // this.pokemonDetails = response;
       });
   }
 
-  // fetchPokemonSelect(pokemonName: string, index: number) {
-  //   this.pokemonService.getPokemon(pokemonName).subscribe((data) => {
-  //     this.pokemonSelect = data;
-  //     this.pokemonSelectedList[index] = { ...data, imageLoaded: false }; // Reiniciar estado da imagem
-  //     this.cdr.detectChanges(); // Forçar a atualização do template
-  //   });
-  // }
-
-  fetchPokemonSelect(pokemonName: string, index: number) {
-    this.pokemonService.getPokemon(pokemonName).subscribe((data) => {
-      if (!this.pokemonSelectedList[index]) {
-        // Se o pokemon não estiver na lista, inicializa o objeto e reseta o estado de carregamento
-        this.pokemonSelectedList[index] = { ...data, imageLoaded: false }; 
-      } else {
-        // Se o pokemon já está na lista, mantém o estado de imageLoaded
-        this.pokemonSelectedList[index] = { ...data, imageLoaded: this.pokemonSelectedList[index].imageLoaded };
-      }
+  fetchPokemonSelect(pokemonName: string, index: number): void {
+    this.pokemonService.getPokemon(pokemonName).subscribe(data => {
+      // Inicializa ou atualiza o estado do Pokémon selecionado
+      this.pokemonSelectedList[index] = {
+        ...data,
+        imageLoaded: this.pokemonSelectedList[index]?.imageLoaded || false
+      };
       this.cdr.detectChanges(); // Atualiza o template
-      setTimeout(() => {
-        // Forçar a abertura do modal manualmente (caso necessário)
-        const modalTrigger = document.querySelector('#pokemonModal') as HTMLElement;
-        if (modalTrigger) {
-          modalTrigger.click(); // Simula o clique no modal para abri-lo
-        }
-      }, 100); // Pequeno atraso para sincronização
-    
+      this.openModal(); // Abre o modal
     });
   }
 
-  onImageSelectedLoad(index: number) {
+  fetchPokemonPage(offset: number, limit: number): void {
+    if (!this.isSearching) {
+      this.pokemonService.getPaginatedPokemon(offset, limit).subscribe((response: PokemonList) => {
+        this.pokemonList = response;
+        this.totalItems = response.count;
+      });
+    }
+  }
+
+  previousPage(): void {
+    if (!this.isSearching && this.pokemonList.previous) {
+      this.offset -= this.limit;
+      this.currentPage--;
+      this.fetchPokemonPage(this.offset, this.limit);
+    }
+  }
+
+  nextPage(): void {
+    if (!this.isSearching && this.pokemonList.next) {
+      this.offset += this.limit;
+      this.currentPage++;
+      this.fetchPokemonPage(this.offset, this.limit);
+    }
+  }
+
+  resetSearch(): void {
+    this.isSearching = false; // Sai do modo de busca
+    this.fetchPokemonPage(this.offset, this.limit); // Carrega a página atual
+  }
+
+  openModal(): void {
+    setTimeout(() => {
+      const modalTrigger = document.querySelector('#pokemonModal') as HTMLElement;
+      if (modalTrigger) {
+        modalTrigger.click(); // Simula o clique no modal para abri-lo
+      }
+    }, 100); // Pequeno atraso para sincronização
+  }
+
+  onImageSelectedLoad(index: number): void {
     if (this.pokemonSelectedList[index]) {
       this.pokemonSelectedList[index].imageLoaded = true;
     }
   }
 
- 
   imageLoaded = false;  // Controle de carregamento da imagem
 
-  //Método chamado quando a imagem é carregada
-  onImageLoad() {
+  // Método chamado quando a imagem é carregada
+  onImageLoad(): void {
     this.imageLoaded = true;
   }
 }
