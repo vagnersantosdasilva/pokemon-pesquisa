@@ -1,7 +1,9 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PokemonService } from '../../service/pokemon.service';
-import { PokemonList} from '../../interfaces/PokemonList';
+import { PokemonList } from '../../interfaces/pokemon.models';
+//import { PokemonList} from '../../interfaces/PokemonList';
+
 
 @Component({
   selector: 'app-busca',
@@ -11,46 +13,45 @@ import { PokemonList} from '../../interfaces/PokemonList';
   styleUrl: './busca.component.css'
 })
 export class BuscaComponent {
-  searchValue: string = ''; // Valor de busca no input
+  public searchValue: string = ''; // Valor de busca no input
+  private pokemonService = inject(PokemonService);
 
-
-  pokemonList: PokemonList = {
+  private pokemonList: PokemonList = {
     count: 0,
     results: [],
-    next: "https://pokeapi.co/api/v2/pokemon/?offset=20&limit=20",
+    next: "https://pokeapi.co/api/v2/pokemon/?offset=10&limit=60",
     previous: ''
   };  // Lista de pokémons obtida da API
 
   @Output() searchResults = new EventEmitter<any>();
 
-  constructor(private pokemonService: PokemonService) { }
-  
 
-  searchPokemon() {
 
+
+  public searchPokemon(): void {
     this.pokemonList = this.resetPokemonList()
-    this.pokemonService.getPokemon(this.searchValue).subscribe(
-      result => {
-        if (this.searchValue) {
-          if (result && result.name)
-          this.pokemonList.results.push({name:result.name, url:''});
-        } else {
-          this.pokemonList = { ...result };
+    this.pokemonService.getPokemon(this.searchValue).subscribe({
+      next: (pokemon) => {
+        if (pokemon.name) {
+          this.pokemonList.results.push(pokemon);
+          this.pokemonList.next = null;
+          this.searchResults.emit({ type: 'list', data: this.pokemonList });
         }
-        this.searchResults.emit({ type: 'list',data: this.pokemonList });
-
+        else {
+          this.loadInitialPokemon();
+        }
       },
-      error => {
+      error: (error) => {
         console.error('Erro ao buscar Pokémon', error);
-      }
-    );
+      },
+    });
   }
 
   ngOnInit() {
     this.loadInitialPokemon();
   }
 
-  loadInitialPokemon() {
+  private loadInitialPokemon(): void {
     this.pokemonService.getPaginatedPokemon(0, 20).subscribe(
       (result: any) => {
         this.pokemonList = result;
@@ -63,13 +64,13 @@ export class BuscaComponent {
     );
   }
 
-  resetPokemonList(){
-    return  {
+  resetPokemonList() {
+    return {
       count: 0,
       results: [],
       next: "https://pokeapi.co/api/v2/pokemon/?offset=20&limit=20",
       previous: ''
-    };  
+    };
   }
 
 }

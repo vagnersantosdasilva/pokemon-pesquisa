@@ -1,23 +1,25 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { environment } from '../../environments/environment.development';
+import { PokemonDetails, PokemonList } from '../interfaces/pokemon.models';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PokemonService {
-  private baseUrl = 'https://pokeapi.co/api/v2/';
+  private baseUrl = environment.apiUrl;
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient)
- {}
 
-  getPokemon(name: string) {
-    const result = this.http.get<any>(`https://pokeapi.co/api/v2/pokemon/${name}`);
-    console.log(result);
+  public getPokemon(name: string) : Observable<PokemonDetails> {
+    const result = this.http.get<PokemonDetails>(`${this.baseUrl}pokemon/${name}`);
+    console.log('retorno padrão:',result);
     return result;
   }
 
-  getPaginatedPokemon(offset: number, limit: number): any {
+  public getPaginatedPokemon(offset: number, limit: number): Observable<PokemonList> {
     const url = `${this.baseUrl}pokemon/?offset=${offset}&limit=${limit}`;
-    return this.http.get<any>(url);
+    return this.http.get<PokemonList>(url);
   }
 }

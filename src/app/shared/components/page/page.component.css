@@ -1,0 +1,16 @@
+  :host {
+    display: block;
+    padding: 2rem 10rem;
+    box-sizing: border-box;
+    min-height: calc(100vh - 56px);
+
+    h2 {
+      font-size: 36px;
+    }
+  }
+
+  @media (max-width: 1200px) {
+    :host {
+      padding: 2rem 5rem;
+    }
+  }

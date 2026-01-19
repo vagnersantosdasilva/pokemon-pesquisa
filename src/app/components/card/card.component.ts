@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PokemonService } from '../../service/pokemon.service';
-import { PokemonList } from '../../interfaces/PokemonList';
+import { PokemonList } from '../../interfaces/pokemon.models';
 
 
 @Component({
@@ -61,9 +61,15 @@ export class CardComponent implements OnInit {
 
   fetchPokemonPage(offset: number, limit: number): void {
     if (!this.isSearching) {
-      this.pokemonService.getPaginatedPokemon(offset, limit).subscribe((response: PokemonList) => {
-        this.pokemonList = response;
-        this.totalItems = response.count;
+      this.pokemonService.getPaginatedPokemon(offset, limit)
+      .subscribe({
+        next: (response) => {
+          this.pokemonList = response;
+          this.totalItems = response.count;
+        },
+        error: (error) => {
+          console.error('Erro ao buscar Pokémon', error);
+        },
       });
     }
   }
