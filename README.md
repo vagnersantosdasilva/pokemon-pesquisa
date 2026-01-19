@@ -68,6 +68,9 @@ e separado em pastas contendo serviços e componentes
 
    Os artefatos da compilação serão armazenados no diretório `dist`, prontos para serem implantados em uma plataforma de hospedagem.
 
+### Para visualizar uma demonstração do projeto 
+
+https://vagnersantosdasilva.github.io/pokemon-pesquisa
 
 ### Licença
 
