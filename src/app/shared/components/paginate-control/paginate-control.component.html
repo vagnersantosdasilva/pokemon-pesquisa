@@ -1,0 +1,13 @@
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="!previous">
+        <button class="page-link" [disabled]="!previous" (click)="previousPage()">ANTERIOR</button>
+      </li>
+      <li class="page-item disabled">
+        <span class="page-link">{{ currentPage }} de {{ getTotalPage() }}</span>
+      </li>
+      <li class="page-item" [class.disabled]="!next">
+        <button class="page-link" [disabled]="!next" (click)="nextPage()">SEGUINTE</button>
+      </li>
+    </ul>
+  </nav>

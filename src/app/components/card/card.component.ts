@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { PokemonService } from '../../service/pokemon.service';
 import { PokemonList } from '../../interfaces/pokemon.models';
 
-
 @Component({
   selector: 'app-card',
   standalone: true,
@@ -13,11 +12,8 @@ import { PokemonList } from '../../interfaces/pokemon.models';
 })
 export class CardComponent implements OnInit {
 
-  currentPage: number = 1;
-  limit: number = 20;
-  totalItems: number = 0;
-  offset: number = 0; // Offset para o cálculo de paginação
   isSearching: boolean = false; // Flag para identificar se está em busca
+  imageLoaded = false;
 
   @Input() pokemonList: PokemonList = {
     count: 0,
@@ -32,11 +28,7 @@ export class CardComponent implements OnInit {
   constructor(private pokemonService: PokemonService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    // Verifica se pokemonList e results estão definidos e não estão vazios
-    if (!this.pokemonDetails && this.pokemonList && Array.isArray(this.pokemonList.results) && this.pokemonList.results.length > 0) {
-      this.fetchPokemonDetails(this.pokemonList.results[0].name); // Usa o primeiro Pokémon por padrão
-    }
-    this.fetchPokemonPage(this.offset, this.limit); // Inicializa a página com a primeira lista
+
   }
 
   fetchPokemonDetails(name: string): void {
@@ -59,42 +51,6 @@ export class CardComponent implements OnInit {
     });
   }
 
-  fetchPokemonPage(offset: number, limit: number): void {
-    if (!this.isSearching) {
-      this.pokemonService.getPaginatedPokemon(offset, limit)
-      .subscribe({
-        next: (response) => {
-          this.pokemonList = response;
-          this.totalItems = response.count;
-        },
-        error: (error) => {
-          console.error('Erro ao buscar Pokémon', error);
-        },
-      });
-    }
-  }
-
-  previousPage(): void {
-    if (!this.isSearching && this.pokemonList.previous) {
-      this.offset -= this.limit;
-      this.currentPage--;
-      this.fetchPokemonPage(this.offset, this.limit);
-    }
-  }
-
-  nextPage(): void {
-    if (!this.isSearching && this.pokemonList.next) {
-      this.offset += this.limit;
-      this.currentPage++;
-      this.fetchPokemonPage(this.offset, this.limit);
-    }
-  }
-
-  resetSearch(): void {
-    this.isSearching = false; // Sai do modo de busca
-    this.fetchPokemonPage(this.offset, this.limit); // Carrega a página atual
-  }
-
   openModal(): void {
     setTimeout(() => {
       const modalTrigger = document.querySelector('#pokemonModal') as HTMLElement;
@@ -110,7 +66,7 @@ export class CardComponent implements OnInit {
     }
   }
 
-  imageLoaded = false;  // Controle de carregamento da imagem
+   // Controle de carregamento da imagem
 
   // Método chamado quando a imagem é carregada
   onImageLoad(): void {

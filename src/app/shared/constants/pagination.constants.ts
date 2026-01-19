@@ -1,0 +1,5 @@
+export const PAGINATION_CONFIG = {
+  DEFAULT_LIMIT: 50,
+  DEFAULT_OFFSET: 0,
+  INITIAL_PAGE: 1
+} as const;

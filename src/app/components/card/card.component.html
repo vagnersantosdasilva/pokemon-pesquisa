@@ -1,182 +1,166 @@
 <div>
-    <div>
-        <div class="row d-flex justify-content-start w-100 m-4" *ngIf="pokemonList">
-            <div class="accordion col-sm-12 col-lg-2 col-md-3 m-3" [id]="'accordionExample' + i"
-                *ngFor="let pokemon of pokemonList.results; index as i">
-                <div class="accordion-item">
-                    <h4 class="accordion-header" [id]="'heading' + i">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                            [attr.data-bs-target]="'#collapse' + i" aria-expanded="true"
-                            [attr.aria-controls]="'collapse' + i" (click)="fetchPokemonSelect(pokemon.name, i)">
-                            <h5 class="card-title">{{ pokemon.name | uppercase }}</h5>
-                        </button>
-                    </h4>
-                    <div [attr.id]="'collapse' + i" class="accordion-collapse collapse" aria-labelledby="'heading' + i"
-                        [attr.data-bs-parent]="'#accordionExample' + i">
-                        <div class="accordion-body" *ngIf="pokemonSelectedList[i]">
-                            <!-- {{pokemonSelectedList[i]?.name}} -->
-                            <!-- Imagem -->
-
-                            <div *ngIf="!pokemonSelectedList[i]?.imageLoaded"
-                                class="d-flex justify-content-center align-items-center" style="height: 150px;">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Carregando...</span>
-                                </div>
-                            </div>
-
-                            <!-- Imagem do Pokémon -->
-                            <img [hidden]="!pokemonSelectedList[i]?.imageLoaded"
-                                [src]="pokemonSelectedList[i]?.sprites?.front_default" class="card-img-top" alt="..."
-                                (load)="onImageSelectedLoad(i)">
-
-                            <!-- Botão para detalhes -->
-                            <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
-                                data-bs-target="#pokemonModal" (click)="fetchPokemonDetails(pokemon.name)">
-                                Detalhes
-                            </button>
-                        </div>
-                    </div>
+  <div>
+    @if(pokemonList){
+    <div class="row d-flex justify-content-center w-100 col-lg-2 col-md-3 col-sm-12">
+      @for(pokemon of pokemonList.results; track pokemon.name; let i = $index){
+      <div class="accordion ms-4 mt-1 col-lg-2 col-md-3 col-sm-12 " [id]="'accordionExample' + pokemon.name" >
+        <div class="accordion-item">
+          <h4 class="accordion-header" [id]="'heading' + pokemon.name">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+              [attr.data-bs-target]="'#collapse' + pokemon.name" aria-expanded="true"
+              [attr.aria-controls]="'collapse' + pokemon.name" (click)="fetchPokemonSelect(pokemon.name, i)">
+              <h5 class="card-title">{{ pokemon.name | uppercase }}</h5>
+            </button>
+          </h4>
+          <div [attr.id]="'collapse' + pokemon.name" class="accordion-collapse collapse"
+            aria-labelledby="'heading' + pokemon.name" [attr.data-bs-parent]="'#accordionExample' + pokemon.name">
+            @if(pokemonSelectedList[i]){
+            <div class="accordion-body" >
+              <!-- {{pokemonSelectedList[i]?.name}} -->
+              <!-- Imagem -->
+               @if(!pokemonSelectedList[i]?.imageLoaded){
+                 <div class="d-flex justify-content-center align-items-center"
+                style="height: 150px;">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Carregando...</span>
                 </div>
+              </div>
+
+               }
+
+              <!-- Imagem do Pokémon -->
+              <img [hidden]="!pokemonSelectedList[i]?.imageLoaded"
+                [src]="pokemonSelectedList[i]?.sprites?.front_default" class="card-img-top" alt="..."
+                (load)="onImageSelectedLoad(i)">
+
+              <!-- Botão para detalhes -->
+              <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#pokemonModal"
+                (click)="fetchPokemonDetails(pokemon.name)">
+                Detalhes
+              </button>
             </div>
-
+            }
+          </div>
         </div>
-
+      </div>
+      }
     </div>
+    }
+  </div>
 
 </div>
-<footer>
-    <div class="d-flex justify-content-center">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                <li class="page-item" [class.disabled]="!pokemonList.previous">
-                    <button class="page-link" (click)="previousPage()"
-                        [disabled]="!pokemonList.previous">ANTERIOR</button>
-                </li>
-                <!-- <li class="page-item disabled">
-                    <span class="page-link">{{ currentPage }}</span>
-                </li> -->
-                <li class="page-item" [class.disabled]="!pokemonList.next">
-                    <button class="page-link" (click)="nextPage()" [disabled]="!pokemonList.next">SEGUINTE</button>
-                </li>
-            </ul>
-        </nav>
-    </div>
-</footer>
-
-
 
 
 <!-- Modal para detalhes do Pokémon -->
 <div class="modal fade" id="pokemonModal" tabindex="-1" aria-labelledby="pokemonModalLabel" aria-hidden="true"
-    *ngIf="pokemonSelect">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="pokemonModalLabel">{{pokemonSelect.name}}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
+  *ngIf="pokemonSelect">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="pokemonModalLabel">{{pokemonSelect.name}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
 
-            <div class="modal-body">
-                <!-- Imagem do Pokémon na linha de cima -->
-                <div class="row mb-4 d-flex justify-content-center">
-                    <div class="col-12 text-center">
-                        <img [src]="pokemonSelect.sprites.front_default" class="img-fluid pokemon-sprite"
-                            alt="Imagem do Pokémon">
-                    </div>
-                </div>
-
-                <!-- Accordion abaixo da imagem -->
-                <div class="accordion" id="accordionExample">
-                    <!-- Habilidades -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingOne">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                Habilidades
-                            </button>
-                        </h2>
-                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-                            data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                <ul>
-                                    <li *ngFor="let ability of pokemonSelect.abilities">{{ ability.ability.name }}</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Base Experience -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingTwo">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                Base Experience
-                            </button>
-                        </h2>
-                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-                            data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                {{pokemonSelect.base_experience}}
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Peso -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingThree">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                Peso
-                            </button>
-                        </h2>
-                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
-                            data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                {{pokemonSelect.weight}}
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Altura -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingFour">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                Altura
-                            </button>
-                        </h2>
-                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
-                            data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                {{pokemonSelect.height}}
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Estatísticas -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingFive">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                                Estatísticas
-                            </button>
-                        </h2>
-                        <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
-                            data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                <ul>
-                                    <li *ngFor="let stat of pokemonSelect.stats">{{ stat.stat.name }}: {{
-                                        stat.base_stat }}</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-            </div>
+      <div class="modal-body">
+        <!-- Imagem do Pokémon na linha de cima -->
+        <div class="row mb-4 d-flex justify-content-center">
+          <div class="col-12 text-center">
+            <img [src]="pokemonSelect.sprites.front_default" class="img-fluid pokemon-sprite" alt="Imagem do Pokémon">
+          </div>
         </div>
+
+        <!-- Accordion abaixo da imagem -->
+        <div class="accordion" id="accordionExample">
+          <!-- Habilidades -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                aria-expanded="true" aria-controls="collapseOne">
+                Habilidades
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+              data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <ul>
+                  <li *ngFor="let ability of pokemonSelect.abilities">{{ ability.ability.name }}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Base Experience -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                Base Experience
+              </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+              data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                {{pokemonSelect.base_experience}}
+              </div>
+            </div>
+          </div>
+
+          <!-- Peso -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                Peso
+              </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+              data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                {{pokemonSelect.weight}}
+              </div>
+            </div>
+          </div>
+
+          <!-- Altura -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFour">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                Altura
+              </button>
+            </h2>
+            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
+              data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                {{pokemonSelect.height}}
+              </div>
+            </div>
+          </div>
+
+          <!-- Estatísticas -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFive">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                Estatísticas
+              </button>
+            </h2>
+            <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
+              data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <ul>
+                  <li *ngFor="let stat of pokemonSelect.stats">{{ stat.stat.name }}: {{
+                                        stat.base_stat }}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+      </div>
     </div>
+  </div>
 </div>
