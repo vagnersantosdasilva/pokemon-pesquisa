@@ -74,14 +74,17 @@ export class MainComponent implements OnInit{
   }
 
   fetchPokemonPage(offset: number, limit: number): void {
-    if (!this.isSearching) {
+    this.isSearching = true;
+    if (this.isSearching) {
       this.pokemonService.getPaginatedPokemon(offset, limit)
       .subscribe({
         next: (response) => {
           this.pokemonList = response;
+          this.isSearching = false;
         },
         error: (error) => {
           console.error('Erro ao buscar Pokémon', error);
+          this.isSearching = false;
         },
       });
     }

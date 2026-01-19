@@ -40,6 +40,7 @@ export class CardComponent implements OnInit {
   }
 
   fetchPokemonSelect(pokemonName: string, index: number): void {
+
     this.pokemonService.getPokemon(pokemonName).subscribe(data => {
       // Inicializa ou atualiza o estado do Pokémon selecionado
       this.pokemonSelectedList[index] = {

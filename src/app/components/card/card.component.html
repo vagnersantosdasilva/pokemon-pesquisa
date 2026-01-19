@@ -3,7 +3,7 @@
     @if(pokemonList){
     <div class="row d-flex justify-content-center w-100 col-lg-2 col-md-3 col-sm-12">
       @for(pokemon of pokemonList.results; track pokemon.name; let i = $index){
-      <div class="accordion ms-4 mt-1 col-lg-2 col-md-3 col-sm-12 " [id]="'accordionExample' + pokemon.name" >
+      <div class="accordion ms-4 mt-1 col-lg-2 col-md-3 col-sm-12 " [id]="'accordionExample' + pokemon.name">
         <div class="accordion-item">
           <h4 class="accordion-header" [id]="'heading' + pokemon.name">
             <button class="accordion-button" type="button" data-bs-toggle="collapse"
@@ -14,19 +14,17 @@
           </h4>
           <div [attr.id]="'collapse' + pokemon.name" class="accordion-collapse collapse"
             aria-labelledby="'heading' + pokemon.name" [attr.data-bs-parent]="'#accordionExample' + pokemon.name">
-            @if(pokemonSelectedList[i]){
-            <div class="accordion-body" >
+
+            <div class="accordion-body">
               <!-- {{pokemonSelectedList[i]?.name}} -->
               <!-- Imagem -->
-               @if(!pokemonSelectedList[i]?.imageLoaded){
-                 <div class="d-flex justify-content-center align-items-center"
-                style="height: 150px;">
+              @if(!pokemonSelectedList[i]?.imageLoaded){
+              <div class="d-flex justify-content-center align-items-center" style="height: 150px;">
                 <div class="spinner-border text-primary" role="status">
                   <span class="visually-hidden">Carregando...</span>
                 </div>
               </div>
-
-               }
+              }
 
               <!-- Imagem do Pokémon -->
               <img [hidden]="!pokemonSelectedList[i]?.imageLoaded"
@@ -35,11 +33,11 @@
 
               <!-- Botão para detalhes -->
               <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#pokemonModal"
-                (click)="fetchPokemonDetails(pokemon.name)">
+                (click)="fetchPokemonDetails(pokemon.name)" [disabled]="!pokemonSelectedList[i]?.imageLoaded">
                 Detalhes
               </button>
             </div>
-            }
+
           </div>
         </div>
       </div>
@@ -47,7 +45,6 @@
     </div>
     }
   </div>
-
 </div>
 
 

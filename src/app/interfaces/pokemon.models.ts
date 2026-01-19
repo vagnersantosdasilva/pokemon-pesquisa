@@ -11,7 +11,7 @@ export interface Pokemon {
   url?: string;
 }
 
-export interface cries {
+export interface Cries {
   lagest?: string;
   legacy?: string;
 };
@@ -24,7 +24,7 @@ export interface PokemonDetails extends Pokemon {
   stats?: Array<{ base_stat: number; effort: number; stat: { name: string; url: string } }>;
   species?: { name: string; url: string };
   game_indices?: Array<{ game_index: number; version: { name: string; url: string } }>;
-  cries?: cries;
+  cries?: Cries;
   sprites?: {
     front_default?: string;
     front_default_female?: string;

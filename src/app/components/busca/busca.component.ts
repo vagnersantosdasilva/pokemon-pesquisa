@@ -61,8 +61,6 @@ export class BuscaComponent {
 
     );
   }
-
-
   private resetPokemonList() : PokemonList {
     return {
       count: 0,
