@@ -16,8 +16,6 @@
             aria-labelledby="'heading' + pokemon.name" [attr.data-bs-parent]="'#accordionExample' + pokemon.name">
 
             <div class="accordion-body">
-              <!-- {{pokemonSelectedList[i]?.name}} -->
-              <!-- Imagem -->
               @if(!pokemonSelectedList[i]?.imageLoaded){
               <div class="d-flex justify-content-center align-items-center" style="height: 150px;">
                 <div class="spinner-border text-primary" role="status">
@@ -62,7 +60,16 @@
         <!-- Imagem do Pokémon na linha de cima -->
         <div class="row mb-4 d-flex justify-content-center">
           <div class="col-12 text-center">
-            <img [src]="pokemonSelect.sprites.front_default" class="img-fluid pokemon-sprite" alt="Imagem do Pokémon">
+            <!--
+            <img [src]="pokemonSelect.sprites.front_default" class="img-fluid " alt="Imagem do Pokémon">
+            -->
+            <div class="pokemon-image-container" *ngIf="pokemonSelect">
+              <img [src]="pokemonSelect.sprites?.front_default" class="pokemon-sprite front"
+                 alt="Frente">
+
+              <img [src]="pokemonSelect.sprites?.back_default" class="pokemon-sprite back"
+                 alt="Verso">
+            </div>
           </div>
         </div>
 
