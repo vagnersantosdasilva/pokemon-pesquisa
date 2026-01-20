@@ -1,7 +1,7 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PokemonService } from '../../service/pokemon.service';
-import { PokemonList } from '../../interfaces/pokemon.models';
+import { PokemonList } from '../../models/pokemon.models';
 import { PAGINATION_CONFIG } from '../../shared/constants/pagination.constants';
 
 @Component({

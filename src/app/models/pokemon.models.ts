@@ -36,5 +36,9 @@ export interface PokemonDetails extends Pokemon {
     back_shiny_female?: string;
   };
   forms?: Array<Pokemon>;
+  base_experience?: number;
 }
 
+export interface PokemonSelectable extends PokemonDetails {
+  imageLoaded?: boolean;
+}

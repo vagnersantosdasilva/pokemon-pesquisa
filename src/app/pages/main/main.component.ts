@@ -1,6 +1,6 @@
 import { Component, inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { PageComponent } from "../../shared/components/page/page.component";
-import { PokemonDetails, PokemonList } from '../../interfaces/pokemon.models';
+import { PokemonDetails, PokemonList } from '../../models/pokemon.models';
 import { BuscaComponent } from "../../components/busca/busca.component";
 import { CardComponent } from "../../components/card/card.component";
 import { FooterComponent } from "../../shared/components/footer/footer.component";

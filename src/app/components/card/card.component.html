@@ -6,8 +6,8 @@
       <div class="accordion ms-4 mt-1 col-lg-2 col-md-3 col-sm-12 " [id]="'accordionExample' + pokemon.name">
         <div class="accordion-item">
           <h4 class="accordion-header" [id]="'heading' + pokemon.name">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-              [attr.data-bs-target]="'#collapse' + pokemon.name" aria-expanded="true"
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              [attr.data-bs-target]="'#collapse' + pokemon.name" aria-expanded="false"
               [attr.aria-controls]="'collapse' + pokemon.name" (click)="fetchPokemonSelect(pokemon.name, i)">
               <h5 class="card-title">{{ pokemon.name | uppercase }}</h5>
             </button>
@@ -64,11 +64,9 @@
             <img [src]="pokemonSelect.sprites.front_default" class="img-fluid " alt="Imagem do Pokémon">
             -->
             <div class="pokemon-image-container" *ngIf="pokemonSelect">
-              <img [src]="pokemonSelect.sprites?.front_default" class="pokemon-sprite front"
-                 alt="Frente">
+              <img [src]="pokemonSelect.sprites?.front_default" class="pokemon-sprite front" alt="Frente">
 
-              <img [src]="pokemonSelect.sprites?.back_default" class="pokemon-sprite back"
-                 alt="Verso">
+              <img [src]="pokemonSelect.sprites?.back_default" class="pokemon-sprite back" alt="Verso">
             </div>
           </div>
         </div>

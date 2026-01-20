@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PokemonService } from '../../service/pokemon.service';
-import { PokemonList } from '../../interfaces/pokemon.models';
+import { PokemonDetails, PokemonList, PokemonSelectable } from '../../models/pokemon.models';
 
 @Component({
   selector: 'app-card',
@@ -10,10 +10,20 @@ import { PokemonList } from '../../interfaces/pokemon.models';
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.css']
 })
-export class CardComponent implements OnInit {
+export class CardComponent  {
 
-  isSearching: boolean = false; // Flag para identificar se está em busca
-  imageLoaded = false;
+  public isSearching: boolean = false; // Flag para identificar se está em busca
+  public pokemonSelectedList: PokemonSelectable[] = [];
+  public pokemonSelect: PokemonDetails = {
+    name: '',
+    sprites: {},
+    types: [], forms: [], id: 0, url: '', game_indices: [],
+    abilities: [], stats: [],
+    cries: {},
+    height: 0, weight: 0,
+    base_experience: 0,
+  };
+  private pokemonService = inject(PokemonService)
 
   @Input() pokemonList: PokemonList = {
     count: 0,
@@ -21,17 +31,9 @@ export class CardComponent implements OnInit {
     next: '',
     previous: '',
   };
-  @Input() pokemonDetails: any = null;
-  @Input() pokemonSelect: any = { name: '', sprites: '', abilities: [], base_experience: '', weight: '', height: '', stats: [] };
-  pokemonSelectedList: any[] = [];
 
-  constructor(private pokemonService: PokemonService, private cdr: ChangeDetectorRef) { }
 
-  ngOnInit(): void {
-
-  }
-
-  fetchPokemonDetails(name: string): void {
+  public fetchPokemonDetails(name: string): void {
     this.pokemonService.getPokemon(name)
       .subscribe(response => {
         this.pokemonSelect = response;
@@ -39,7 +41,7 @@ export class CardComponent implements OnInit {
       });
   }
 
-  fetchPokemonSelect(pokemonName: string, index: number): void {
+  public fetchPokemonSelect(pokemonName: string, index: number): void {
 
     this.pokemonService.getPokemon(pokemonName).subscribe(data => {
       // Inicializa ou atualiza o estado do Pokémon selecionado
@@ -47,7 +49,7 @@ export class CardComponent implements OnInit {
         ...data,
         imageLoaded: this.pokemonSelectedList[index]?.imageLoaded || false
       };
-      this.cdr.detectChanges(); // Atualiza o template
+      // Atualiza o template
       this.openModal(); // Abre o modal
     });
   }
@@ -65,12 +67,5 @@ export class CardComponent implements OnInit {
     if (this.pokemonSelectedList[index]) {
       this.pokemonSelectedList[index].imageLoaded = true;
     }
-  }
-
-   // Controle de carregamento da imagem
-
-  // Método chamado quando a imagem é carregada
-  onImageLoad(): void {
-    this.imageLoaded = true;
   }
 }
